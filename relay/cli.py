@@ -30,7 +30,7 @@ def register_cli(app):
     def seed_demo():
         """Create the demo accounts, rooms and a short conversation history."""
         if User.query.count():
-            click.echo("The database already has users; nothing was seeded.")
+            click.echo("The database already has users; nothing seeded.")
             return
         admin = auth.register("admin", "admin12345", role="admin")
         users = {name: auth.register(name, DEMO_PASSWORD) for name in DEMO_USERS}
