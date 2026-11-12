@@ -1,8 +1,24 @@
-"""Operator commands, run as `flask --app run <command>`.
+"""Operator commands, run as `flask --app run <command>`:
 
-B4 adds `create-admin <username>` and B6 adds `seed-demo`.
+    create-admin <username>    create an administrator (prompts for a password)
+
+B6 adds `seed-demo`.
 """
+
+import click
+
+from relay.errors import RelayError
+from relay.services import auth
 
 
 def register_cli(app):
-    """Attach the operator commands to the app. There are no commands yet."""
+    @app.cli.command("create-admin")
+    @click.argument("username")
+    @click.password_option()
+    def create_admin(username, password):
+        """Create an administrator account."""
+        try:
+            user = auth.register(username, password, role="admin")
+        except RelayError as err:
+            raise click.ClickException(err.message) from None
+        click.echo(f"Created admin '{user.username}'")
