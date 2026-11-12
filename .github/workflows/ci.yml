@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Test (pytest + coverage)
+        shell: bash
+        run: |
+          set +e
+          pytest --cov=relay --cov-report=term-missing
+          code=$?
+          # S3 removes the exit-5 tolerance once T1 has merged
+          if [ "$code" -eq 5 ]; then
+            echo "No tests collected (pytest exit code 5): accepted until T1 merges."
+            exit 0
+          fi
+          exit "$code"
