@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Relay">
+  <defs>
+    <linearGradient id="relay-gradient" x1="8" y1="4" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7C9CFF"/>
+      <stop offset="1" stop-color="#5268E8"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="19" fill="url(#relay-gradient)"/>
+  <path d="M18 22.5C18 18.91 20.91 16 24.5 16h16C44.09 16 47 18.91 47 22.5v10C47 36.09 44.09 39 40.5 39H31l-9.5 8v-8.62A9.48 9.48 0 0 1 18 31.5v-9Z" fill="#fff" opacity=".97"/>
+  <path d="m34.5 20.5-7 9h5l-2 8 8-10h-5l1-7Z" fill="#5268E8"/>
+</svg>

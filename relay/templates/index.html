@@ -1,1 +1,221 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Relay</title></head><body><p>Relay server is running. The client arrives in F1.</p></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="Relay — a simple, real-time team chat.">
+  <title>Relay · Team chat</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/icon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+  <script defer src="{{ url_for('static', filename='vendor/socket.io.min.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+<body>
+  <main id="app" class="app-root">
+    <div id="connection-banner" class="connection-banner" role="status" aria-live="polite" hidden>
+      <span class="status-dot" aria-hidden="true"></span>
+      <span id="connection-banner-text">Reconnecting…</span>
+    </div>
+
+    <section id="loading-state" class="loading-screen" role="status" aria-live="polite">
+      <div class="loading-card">
+        <img class="loading-mark" src="{{ url_for('static', filename='img/icon.svg') }}" alt="" width="56" height="56">
+        <p class="eyebrow">YOUR TEAM, IN SYNC</p>
+        <h1>Relay<span class="brand-period">.</span></h1>
+        <p class="loading-copy">Getting your conversations ready</p>
+        <span class="loading-indicator" aria-hidden="true"></span>
+        <span class="loading-footnote">A calmer place to talk and work together.</span>
+      </div>
+    </section>
+
+    <section id="auth-view" class="auth-screen" aria-labelledby="auth-title" hidden>
+      <div class="auth-aside">
+        <a class="brand-lockup" href="#home" aria-label="Relay home">
+          <img src="{{ url_for('static', filename='img/icon.svg') }}" alt="" width="38" height="38">
+          <span>relay<span class="brand-period">.</span></span>
+        </a>
+        <div class="auth-pitch">
+          <p class="eyebrow">GOOD CONVERSATIONS MOVE WORK FORWARD</p>
+          <h1>Make room for<br><span>better work.</span></h1>
+          <p>Keep your people, projects and everyday conversations connected in one place.</p>
+        </div>
+        <p class="auth-aside-foot">Simple by design. Together by default.</p>
+      </div>
+      <div class="auth-main">
+        <div class="auth-card">
+          <p class="eyebrow">WELCOME TO RELAY</p>
+          <h2 id="auth-title">Welcome back</h2>
+          <p id="auth-description" class="muted-copy">Log in to pick up where your team left off.</p>
+          <form id="auth-form" class="form-stack" novalidate>
+            <label class="field-label" for="auth-username">Username</label>
+            <input id="auth-username" name="username" class="text-input" type="text" autocomplete="username" minlength="3" maxlength="20" pattern="[a-zA-Z0-9_]{3,20}" required>
+            <p class="field-hint">3–20 characters: letters, numbers and underscores.</p>
+            <label class="field-label" for="auth-password">Password</label>
+            <input id="auth-password" name="password" class="text-input" type="password" autocomplete="current-password" minlength="8" required>
+            <p class="field-hint">At least 8 characters.</p>
+            <p id="auth-error" class="inline-error" role="alert" hidden></p>
+            <button id="auth-submit" class="button button-primary button-wide" type="submit">Log in</button>
+          </form>
+          <p class="auth-switch"><span id="auth-switch-copy">New to Relay?</span> <button id="auth-mode-toggle" class="text-button" type="button">Create an account</button></p>
+          <p id="auth-notice" class="notice-text" role="status" aria-live="polite" hidden></p>
+        </div>
+        <p class="auth-legal">By continuing, you agree to keep conversations respectful and secure.</p>
+      </div>
+    </section>
+
+    <section id="chat-view" class="chat-screen" aria-label="Chat workspace" hidden>
+      <div class="chat-layout">
+        <aside id="sidebar" class="sidebar" aria-label="Workspace sidebar">
+          <div class="sidebar-top">
+            <a class="brand-lockup" href="#home" aria-label="Relay home">
+              <img src="{{ url_for('static', filename='img/icon.svg') }}" alt="" width="34" height="34">
+              <span>relay<span class="brand-period">.</span></span>
+            </a>
+            <span class="workspace-pill">WORKSPACE</span>
+          </div>
+
+          <section class="profile-card" aria-label="Signed-in user">
+            <div id="me-avatar" class="avatar avatar-self" aria-hidden="true">ME</div>
+            <div class="profile-copy">
+              <strong id="me-username">Your name</strong>
+              <span id="me-role" class="muted-small">Member</span>
+            </div>
+            <button id="logout-button" class="icon-button" type="button" aria-label="Log out" title="Log out">↗</button>
+          </section>
+          <button id="admin-button" class="nav-utility" type="button" hidden><span aria-hidden="true">✳</span> Admin console</button>
+
+          <div class="sidebar-section-heading">
+            <span>PEOPLE</span>
+          </div>
+          <form id="people-search-form" class="search-field" role="search">
+            <span aria-hidden="true">⌕</span>
+            <label class="visually-hidden" for="people-search">Search people</label>
+            <input id="people-search" type="search" placeholder="Find people" autocomplete="off">
+          </form>
+          <div id="people-search-results" class="people-search-results" aria-live="polite"></div>
+
+          <div class="sidebar-section-heading section-heading-spaced">
+            <span>CONVERSATIONS</span>
+            <button id="create-room-button" class="mini-icon-button" type="button" aria-label="Create a room" title="Create a room">＋</button>
+          </div>
+          <nav id="room-list" class="room-list" aria-label="Conversations">
+            <div class="sidebar-empty">Your conversations will appear here.</div>
+          </nav>
+          <button id="browse-rooms-button" class="nav-utility nav-utility-muted" type="button"><span aria-hidden="true">＋</span> Browse rooms</button>
+
+          <div class="sidebar-section-heading section-heading-spaced online-heading">
+            <span>ONLINE NOW</span>
+            <span id="online-count" class="count-pill">0</span>
+          </div>
+          <div id="online-list" class="online-list" aria-live="polite">
+            <div class="sidebar-empty">No one else is online yet.</div>
+          </div>
+          <div class="sidebar-bottom"><span class="secure-indicator" aria-hidden="true"></span> Connected to your workspace</div>
+        </aside>
+
+        <section class="conversation-panel" aria-label="Conversation">
+          <header class="conversation-header">
+            <button id="sidebar-toggle" class="icon-button sidebar-toggle" type="button" aria-label="Toggle sidebar" aria-expanded="false">☰</button>
+            <div class="conversation-heading">
+              <div class="conversation-title-row">
+                <h1 id="conversation-title">Choose a conversation</h1>
+                <span id="invite-code-chip" class="invite-code-chip" hidden></span>
+              </div>
+              <p id="conversation-subtitle" class="muted-small">Your team conversations, all in one place</p>
+            </div>
+            <div class="conversation-actions">
+              <button id="conversation-search-button" class="button button-quiet" type="button"><span aria-hidden="true">⌕</span> Search</button>
+              <button id="leave-room-button" class="button button-quiet button-danger-text" type="button" hidden>Leave</button>
+            </div>
+          </header>
+
+          <div id="message-list" class="message-list" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Messages">
+            <div class="conversation-welcome">
+              <div class="welcome-symbol" aria-hidden="true">✳</div>
+              <h2>Your next good conversation starts here.</h2>
+              <p>Select a room or start a direct message with someone from your workspace.</p>
+            </div>
+          </div>
+          <div id="typing-line" class="typing-line" aria-live="polite" hidden></div>
+
+          <form id="composer-form" class="composer" novalidate>
+            <div id="attachment-chip" class="attachment-chip" hidden>
+              <span id="attachment-name"></span>
+              <span id="attachment-size" class="muted-small"></span>
+              <button id="attachment-remove" class="mini-icon-button" type="button" aria-label="Remove attachment">×</button>
+            </div>
+            <div class="composer-box">
+              <label class="icon-button attach-button" for="attachment-input" aria-label="Attach a file" title="Attach a file">＋</label>
+              <input id="attachment-input" class="visually-hidden" type="file">
+              <label class="visually-hidden" for="message-input">Write a message</label>
+              <textarea id="message-input" rows="1" maxlength="4000" placeholder="Message your team…"></textarea>
+              <button id="send-button" class="send-button" type="submit" aria-label="Send message" title="Send message">↑</button>
+            </div>
+            <p id="composer-error" class="inline-error composer-error" role="alert" hidden></p>
+            <p class="composer-hint">Enter to send <span aria-hidden="true">·</span> Shift + Enter for a new line</p>
+          </form>
+        </section>
+      </div>
+    </section>
+
+    <section id="admin-view" class="admin-screen" aria-labelledby="admin-title" hidden>
+      <header class="admin-header">
+        <a class="brand-lockup" href="#home" aria-label="Relay home">
+          <img src="{{ url_for('static', filename='img/icon.svg') }}" alt="" width="34" height="34">
+          <span>relay<span class="brand-period">.</span></span>
+        </a>
+        <div class="admin-header-copy"><p class="eyebrow">WORKSPACE MANAGEMENT</p><h1 id="admin-title">Admin console</h1></div>
+        <button id="admin-back-button" class="button button-quiet" type="button">← Back to chat</button>
+      </header>
+      <div class="admin-content">
+        <nav id="admin-tabs" class="admin-tabs" aria-label="Admin sections" role="tablist">
+          <button class="admin-tab is-active" id="admin-tab-reports" type="button" role="tab" aria-selected="true" aria-controls="admin-panel" data-tab="reports">Reports</button>
+          <button class="admin-tab" id="admin-tab-users" type="button" role="tab" aria-selected="false" aria-controls="admin-panel" data-tab="users">Users</button>
+          <button class="admin-tab" id="admin-tab-audit" type="button" role="tab" aria-selected="false" aria-controls="admin-panel" data-tab="audit">Audit</button>
+          <button class="admin-tab" id="admin-tab-clients" type="button" role="tab" aria-selected="false" aria-controls="admin-panel" data-tab="clients">Clients</button>
+          <button class="admin-tab" id="admin-tab-activity" type="button" role="tab" aria-selected="false" aria-controls="admin-panel" data-tab="activity">Activity</button>
+        </nav>
+        <div id="admin-panel" class="admin-panel" role="tabpanel" aria-labelledby="admin-tab-reports">
+          <div class="admin-panel-heading"><div><h2>Reports</h2><p class="muted-copy">Review and resolve reported messages.</p></div><button id="admin-refresh-button" class="button button-secondary" type="button">↻ Refresh</button></div>
+          <div id="admin-body" class="admin-body"><p class="empty-state">Admin data will appear here.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <dialog id="search-dialog" class="app-dialog" aria-labelledby="search-dialog-title">
+      <form method="dialog" class="dialog-topline"><div><p class="eyebrow">FIND A MOMENT</p><h2 id="search-dialog-title">Search conversations</h2></div><button class="icon-button dialog-close" value="cancel" aria-label="Close search">×</button></form>
+      <form id="message-search-form" class="form-stack">
+        <label class="visually-hidden" for="message-search-input">Search messages</label>
+        <input id="message-search-input" class="text-input" type="search" minlength="2" placeholder="Search messages…">
+        <label class="checkbox-row"><input id="search-current-room" type="checkbox"> Search only this conversation</label>
+        <button class="button button-primary" type="submit">Search</button>
+      </form>
+      <div id="message-search-results" class="dialog-results" aria-live="polite"></div>
+    </dialog>
+
+    <dialog id="create-room-dialog" class="app-dialog" aria-labelledby="create-room-title">
+      <form method="dialog" class="dialog-topline"><div><p class="eyebrow">BRING PEOPLE TOGETHER</p><h2 id="create-room-title">Create a room</h2></div><button class="icon-button dialog-close" value="cancel" aria-label="Close dialog">×</button></form>
+      <form id="create-room-form" class="form-stack">
+        <label class="field-label" for="new-room-name">Room name</label>
+        <input id="new-room-name" class="text-input" type="text" minlength="1" maxlength="40" required placeholder="e.g. project-team">
+        <span class="field-hint">Choose a short, memorable name (1–40 characters).</span>
+        <label class="field-label" for="new-room-visibility">Visibility</label>
+        <select id="new-room-visibility" class="text-input"><option value="public">Public — anyone can join</option><option value="private">Private — invite code required</option></select>
+        <button class="button button-primary" type="submit">Create room</button>
+      </form>
+    </dialog>
+
+    <dialog id="browse-rooms-dialog" class="app-dialog" aria-labelledby="browse-rooms-title">
+      <form method="dialog" class="dialog-topline"><div><p class="eyebrow">DISCOVER YOUR COMMUNITY</p><h2 id="browse-rooms-title">Browse rooms</h2></div><button class="icon-button dialog-close" value="cancel" aria-label="Close dialog">×</button></form>
+      <div id="public-room-results" class="dialog-results" aria-live="polite"><p class="empty-state">Public rooms will appear here.</p></div>
+      <div class="dialog-divider"><span>OR JOIN A PRIVATE ROOM</span></div>
+      <form id="join-room-form" class="form-stack">
+        <label class="field-label" for="invite-code-input">Invite code</label>
+        <input id="invite-code-input" class="text-input" type="text" autocomplete="off" placeholder="Paste an invite code">
+        <button class="button button-secondary" type="submit">Join with code</button>
+      </form>
+    </dialog>
+  </main>
+</body>
+</html>
