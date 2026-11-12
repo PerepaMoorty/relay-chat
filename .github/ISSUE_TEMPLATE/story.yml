@@ -1,0 +1,40 @@
+name: Story / requirement card
+description: One FR, NFR or SR card, mirrored from Jira
+title: "CHAT-"
+body:
+  - type: input
+    id: requirement
+    attributes:
+      label: Requirement ID
+      placeholder: "CHAT-F-004"
+    validations:
+      required: true
+  - type: input
+    id: jira
+    attributes:
+      label: Jira key
+      placeholder: "RLY-17"
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Testable conditions the Product Owner will check at the sprint review.
+    validations:
+      required: true
+  - type: input
+    id: points
+    attributes:
+      label: Story points
+      placeholder: "2"
+    validations:
+      required: true
+  - type: input
+    id: prs
+    attributes:
+      label: Registry PR IDs
+      description: Every PR that contributes to this card (control section 8.2).
+      placeholder: "B5, B8, F7, T6"
+    validations:
+      required: true
