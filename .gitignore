@@ -1,0 +1,28 @@
+# Local-only folders (never pushed)
+.claude/
+.generated/
+References/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# App data and secrets
+instance/
+*.db
+.env
+
+# Archives
+*.zip
+
+# Editors and OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
