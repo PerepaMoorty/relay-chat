@@ -69,10 +69,10 @@ Viswajith; accepted by Naivadh at the sprint review.
 
 ## 6. Sprint goals and scope (control section 7)
 
-| Sprint | Goal | Functional requirements |
-|---|---|---|
-| Sprint 1 | The v1.0 chat works end to end | F-001 to F-011, F-013 to F-023, F-027 to F-030, F-040 (28 FRs) |
-| Sprint 2 | Relay behaves like a real chat product | F-012, F-026, F-037, F-038, F-039, F-041, F-046 to F-049, F-051, F-052 (11 FRs), plus NFR and SR verification |
+| Sprint | Dates | Goal | Functional requirements |
+|---|---|---|---|
+| Sprint 1 | 19 Oct to 23 Oct 2026 | The v1.0 chat works end to end | F-001 to F-011, F-013 to F-023, F-027 to F-030, F-040 (28 FRs) |
+| Sprint 2 | 26 Oct to 30 Oct 2026 | Relay behaves like a real chat product | F-012, F-026, F-037, F-038, F-039, F-041, F-046 to F-049, F-051, F-052 (11 FRs), plus NFR and SR verification |
 
 **Change from the earlier plan.** F-038 (inline image preview) and F-052 (monitor clients and activity) move from
 Sprint 1 to Sprint 2, because they depend on file upload (B11) and the admin API (B12). Naivadh records this in the
@@ -169,7 +169,7 @@ PRs per member per sprint, counted from the registry above (45 PRs in total):
 | **Total** | **31** | **14** | **45** |
 
 Viswajith carries the largest load in Sprint 1, because he owns both the whole frontend and every test PR. Moorty
-is the critical path: B1 to B3 to B4 to B7 to B8 gates the frontend controller (F9) and the real-time tests (T6).
+is the critical path: B1 to B2 to B3 to B4 to B7 to B8 gates the frontend controller (F9) and the real-time tests (T6).
 Story points per card are tracked on the GitHub Project.
 
 ## 9. Ceremonies
