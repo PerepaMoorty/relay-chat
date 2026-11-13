@@ -1,0 +1,48 @@
+flowchart LR
+    subgraph ClientLayer ["Client Layer (Browser / Vanilla ES Modules)"]
+        direction TB
+        UI["DOM / UI Views (Vanilla JS + CSS)"]
+        Store["Client Store (In-Memory pub/sub)"]
+        SocketC["Socket.IO Client (Vendored 4.7.5)"]
+        RestC["REST API Client (fetch wrapper)"]
+        UI <--> Store
+        Store <--> SocketC
+        Store <--> RestC
+    end
+
+    subgraph ServerProcess ["Relay Server Process (Single Python Process)"]
+        direction TB
+        subgraph TransportLayer ["Transport & API Layer"]
+            HTTP["Flask Blueprints (/api/*, static, index)"]
+            WS["Flask-SocketIO Handlers (@acked events)"]
+        end
+
+        subgraph ServiceLayer ["Service Layer (Pure Domain Logic)"]
+            AuthSvc["Auth & Accounts"]
+            PresSvc["Presence Registry (In-Memory sid <-> user)"]
+            MsgSvc["Messages & Validation"]
+            RoomSvc["Rooms & Membership"]
+            RcptSvc["Receipts Watermarks"]
+            SyncSvc["Catch-up Sync"]
+            FileSvc["File Manager"]
+            ModSvc["Moderation & Reports"]
+            AuditSvc["Append-Only Audit Log"]
+            ActSvc["Server Activity"]
+            NotifSvc["Notify Engine (socketio.emit boundary)"]
+        end
+
+        subgraph PersistenceLayer ["Data & Storage Layer"]
+            DB[("SQLite Database\ninstance/relay.db")]
+            FileStore[["Local File Store\ninstance/uploads/"]]
+        end
+    end
+
+    RestC -- "HTTP Request/Response (JSON)" --> HTTP
+    SocketC <== "WebSocket Protocol (Socket.IO Events & Acks)" ==> WS
+
+    HTTP --> ServiceLayer
+    WS --> ServiceLayer
+    ServiceLayer --> PersistenceLayer
+    ServiceLayer --> PresSvc
+    ServiceLayer --> NotifSvc
+    NotifSvc -.->|Push to Socket Rooms| WS
