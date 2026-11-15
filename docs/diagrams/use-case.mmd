@@ -1,0 +1,87 @@
+flowchart TD
+    subgraph Actors
+        V[Visitor / Unregistered User]
+        U[Registered User]
+        RO[Room Owner]
+        A[Administrator]
+    end
+
+    subgraph "Authentication & Session (E1, E2)"
+        UC1[Register Account]
+        UC2[Log In / Authenticate]
+        UC3[Connect WebSocket Session]
+        UC4[Log Out / Terminate Session]
+    end
+
+    subgraph "Messaging & Presence (E3, E4)"
+        UC5[Send Public Message]
+        UC6[Send Direct Message 1:1]
+        UC7[Edit Own Message]
+        UC8[Delete Own Message]
+        UC9[View History & Pagination]
+        UC10[View Online Presence]
+        UC11[Send/Receive Read Receipts]
+        UC12[View Typing Indicator]
+        UC13[Reconnect & Sync Missed]
+    end
+
+    subgraph "Rooms (E5)"
+        UC14[Create Group Room]
+        UC15[Browse & Join Public Room]
+        UC16[Join Room by Invite Code]
+        UC17[Leave Room]
+    end
+
+    subgraph "Files & Search (E6, E7)"
+        UC18[Upload Attachment <= 10MB]
+        UC19[Preview Inline Image]
+        UC20[Download Room Attachment]
+        UC21[Search Messages across Rooms]
+    end
+
+    subgraph "Moderation & Admin (E8)"
+        UC22[Report Inappropriate Message]
+        UC23[Review Flagged Reports]
+        UC24[Delete Reported Message]
+        UC25[Ban / Unban User]
+        UC26[Mute / Unmute User]
+        UC27[View Append-Only Audit Log]
+        UC28[Monitor Live Sockets & Activity]
+    end
+
+    %% Actor relationships
+    V --> UC1
+    V --> UC2
+
+    U --> UC2
+    U --> UC3
+    U --> UC4
+    U --> UC5
+    U --> UC6
+    U --> UC7
+    U --> UC8
+    U --> UC9
+    U --> UC10
+    U --> UC11
+    U --> UC12
+    U --> UC13
+    U --> UC14
+    U --> UC15
+    U --> UC16
+    U --> UC17
+    U --> UC18
+    U --> UC19
+    U --> UC20
+    U --> UC21
+    U --> UC22
+
+    RO -.->|inherits permissions| U
+    RO --> UC14
+
+    A -.->|inherits user actions| U
+    A --> UC23
+    A --> UC24
+    A --> UC25
+    A --> UC26
+    A --> UC27
+    A --> UC28
