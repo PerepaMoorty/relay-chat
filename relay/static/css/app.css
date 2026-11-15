@@ -216,6 +216,37 @@ a { color: inherit; text-decoration: none; }
 .admin-body { min-height: 170px; }
 .empty-state { display: grid; min-height: 125px; place-items: center; margin: 0; color: var(--text-faint); font-size: .82rem; text-align: center; }
 
+/* F10 admin records and actions */
+.admin-body {
+  display: grid;
+  gap: 12px;
+}
+.admin-record {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.admin-record-title {
+  margin: 0 0 10px;
+  font-size: .95rem;
+  letter-spacing: -.02em;
+}
+.admin-record-detail {
+  margin: 5px 0;
+  color: var(--text-soft);
+  font-size: .8rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.admin-record-actions,
+.message-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
 /* Dialogs */
 .app-dialog { width: min(92vw, 510px); max-height: min(85vh, 760px); overflow: auto; padding: 25px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
 .app-dialog::backdrop { background: rgba(8, 13, 28, .53); backdrop-filter: blur(4px); }

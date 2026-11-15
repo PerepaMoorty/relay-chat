@@ -461,11 +461,25 @@ function renderEditForm(message, container) {
 }
 
 function renderMessageActions(message, bubble) {
-    if (!isOwnMessage(message) || message.deleted) {
-        // F10 can attach its report action to this message container.
-        if (!isOwnMessage(message)) {
-            bubble.setAttribute("data-report-message-id", text(message.id));
-        }
+    const own = isOwnMessage(message);
+
+    // F10: allow users to report messages from other people.
+    if (!own && !message.deleted) {
+        bubble.setAttribute("data-report-message-id", text(message.id));
+
+        const actions = el("div", { class: "message-actions" });
+        const report = el("button", {
+            type: "button",
+            class: "button button-quiet button-danger-text",
+            "data-report-button": "true"
+        }, "Report");
+
+        actions.appendChild(report);
+        bubble.appendChild(actions);
+        return;
+    }
+
+    if (!own || message.deleted) {
         return;
     }
 
