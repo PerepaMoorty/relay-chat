@@ -39,6 +39,7 @@ import * as SidebarView from "./views/sidebar.js";
 import * as ConversationView from "./views/conversation.js";
 import * as ComposerView from "./views/composer.js";
 import * as DialogsView from "./views/dialogs.js";
+import * as AdminView from "./views/admin.js";
 
 let booting = true;
 let loginMounted = false;
@@ -224,6 +225,7 @@ function handleSessionTerminated(payload) {
 function openAdmin() {
     if (state.me?.role === "admin") {
         setView("admin");
+        AdminView.show();
     }
 }
 
@@ -619,6 +621,7 @@ async function boot() {
  * Initialize the application after the HTML document has loaded.
  */
 function initialize() {
+    AdminView.mount();
     LoginView.mount({
         onLoggedIn: startChat
     });
