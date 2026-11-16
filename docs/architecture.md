@@ -119,6 +119,11 @@ These rules are checked in every review:
 
 `TestConfig(Config)`: `TESTING = True`, `SECRET_KEY = "test"`, in-memory SQLite, `PRESENCE_GRACE_SECONDS = 0`.
 
+At start-up, `create_app()` puts a file-based SQLite database in **WAL mode** (`PRAGMA journal_mode=WAL`). Readers
+(history, room lists) then never wait for a writer (a new message), and only writers queue for each other, up to
+the 15 s busy timeout. The mode is stored in the database file. SQLite keeps `relay.db-wal` and `relay.db-shm`
+next to it in `instance/`. The in-memory test database has no WAL.
+
 ## 5. Real-time design (Socket.IO)
 
 All timestamps are ISO-8601 UTC strings ending in `Z` (e.g. `"2026-11-03T10:15:02Z"`) or `null`. All IDs are integers.

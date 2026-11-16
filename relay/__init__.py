@@ -51,8 +51,21 @@ def create_app(config: type[Config] = Config) -> Flask:
     with app.app_context():
         from relay.services import rooms
 
+        _enable_wal()
         db.create_all()
         rooms.general_room()
         db.session.commit()
 
     return app
+
+
+def _enable_wal() -> None:
+    """Put a file-based SQLite database in WAL mode, so readers never block the writer (or the other way round).
+
+    The journal mode is stored in the database file, so setting it once at start-up applies to every later
+    connection. An in-memory database (the tests) has no WAL and keeps its "memory" journal.
+    """
+    if db.engine.dialect.name != "sqlite":
+        return
+    with db.engine.connect() as conn:
+        conn.exec_driver_sql("PRAGMA journal_mode=WAL")
