@@ -295,14 +295,14 @@ The matrix below maps each requirement across the software lifecycle. All in-sco
 | CHAT-F-051 | Append-only audit log | 4.8 | 6, 7 | `relay/services/audit.py` | TC-51 | 2 | B12, F10, T8 | A |
 | CHAT-F-052 | Monitor connected clients & activity | 4.8 | 6 | `relay/services/activity.py` | TC-52 | 2 | B2, B12, F10, T8 | A |
 | CHAT-NF-001 | End-to-end message latency < 200ms | 5.1 | 1, 13 | `relay/events/chat.py` | TC-N01 | 2 | NF-001, NF-005 (T9) | A |
-| CHAT-NF-002 | Cross-browser compatibility | 5.1 | 2 | `relay/templates/index.html` | TC-N02 | 1 | NF-002, NF-004, NF-006 (T6) | A |
+| CHAT-NF-002 | Cross-browser compatibility | 5.1 | 2 | `relay/templates/index.html` | TC-N02 | 1 | NF-002, NF-004, NF-006 (T6) | P |
 | CHAT-NF-003 | Graceful recovery from network disconnects | 5.1 | 5.2, 5.7 | `relay/events/_ack.py` | TC-N03 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | A |
 | CHAT-NF-004 | Zero external runtime broker dependencies | 5.1 | 2 | `run.py` | TC-N04 | 1 | NF-002, NF-004, NF-006 (T6) | A |
 | CHAT-NF-005 | Concurrent client scalability (>= 20 clients) | 5.1 | 13 | `relay/events/connection.py` | TC-N05 | 2 | NF-001, NF-005 (T9) | A |
 | CHAT-NF-006 | Strict message delivery order preservation | 5.1 | 5.7 | `relay/models/message.py` | TC-N06 | 1 | NF-002, NF-004, NF-006 (T6) | A |
 | CHAT-NF-007 | Zero-configuration deployment on localhost/LAN | 5.1 | 2, 4.3 | `run.py` | TC-N07 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | A |
 | CHAT-NF-008 | File storage cap <= 10 MB per attachment | 5.1 | 4.3, 10 | `relay/services/files.py` | TC-N08 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | A |
-| CHAT-NF-009 | Automated test suite coverage >= 70% on services | 5.1 | 13 | `tests/` | TC-N09 | 2 | NF-009 (S5) | A |
+| CHAT-NF-009 | Automated test suite coverage >= 70% on services | 5.1 | 13 | `tests/` | TC-N09 | 2 | NF-009 (S5) | P |
 | CHAT-NF-010 | One-click startup demo execution scripts | 5.1 | 1 | `run-demo.bat` | TC-N10 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | A |
 | CHAT-NF-011 | Data retention and immutable audit trail | 5.1 | 7, 10 | `relay/services/audit.py` | TC-N11 | 2 | NF-011 (B12) | A |
 | CHAT-SR-001 | Stale and unauthenticated socket rejection | 6.1 | 5.2, 10 | `relay/events/_ack.py` | TC-S01 | 1 | SR-001, 003, 005, 007 (T6) | A |
@@ -327,14 +327,14 @@ The matrix below maps each requirement across the software lifecycle. All in-sco
 | CHAT-F-051 | Append-only audit log | 4.8 | 6, 7 | `relay/services/audit.py` | TC-51 | 2 | B12, F10, T8 | N |
 | CHAT-F-052 | Monitor connected clients & activity | 4.8 | 6 | `relay/services/activity.py` | TC-52 | 2 | B2, B12, F10, T8 | N |
 | CHAT-NF-001 | End-to-end message latency < 200ms | 5.1 | 1, 13 | `relay/events/chat.py` | TC-N01 | 2 | NF-001, NF-005 (T9) | N |
-| CHAT-NF-002 | Cross-browser compatibility | 5.1 | 2 | `relay/templates/index.html` | TC-N02 | 1 | NF-002, NF-004, NF-006 (T6) | N |
+| CHAT-NF-002 | Cross-browser compatibility | 5.1 | 2 | `relay/templates/index.html` | TC-N02 | 1 | NF-002, NF-004, NF-006 (T6) | P |
 | CHAT-NF-003 | Graceful recovery from network disconnects | 5.1 | 5.2, 5.7 | `relay/events/_ack.py` | TC-N03 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | N |
 | CHAT-NF-004 | Zero external runtime broker dependencies | 5.1 | 2 | `run.py` | TC-N04 | 1 | NF-002, NF-004, NF-006 (T6) | N |
 | CHAT-NF-005 | Concurrent client scalability (>= 20 clients) | 5.1 | 13 | `relay/events/connection.py` | TC-N05 | 2 | NF-001, NF-005 (T9) | N |
 | CHAT-NF-006 | Strict message delivery order preservation | 5.1 | 5.7 | `relay/models/message.py` | TC-N06 | 1 | NF-002, NF-004, NF-006 (T6) | N |
 | CHAT-NF-007 | Zero-configuration deployment on localhost/LAN | 5.1 | 2, 4.3 | `run.py` | TC-N07 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | N |
 | CHAT-NF-008 | File storage cap <= 10 MB per attachment | 5.1 | 4.3, 10 | `relay/services/files.py` | TC-N08 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | N |
-| CHAT-NF-009 | Automated test suite coverage >= 70% on services | 5.1 | 13 | `tests/` | TC-N09 | 2 | NF-009 (S5) | N |
+| CHAT-NF-009 | Automated test suite coverage >= 70% on services | 5.1 | 13 | `tests/` | TC-N09 | 2 | NF-009 (S5) | P |
 | CHAT-NF-010 | One-click startup demo execution scripts | 5.1 | 1 | `run-demo.bat` | TC-N10 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | N |
 | CHAT-NF-011 | Data retention and immutable audit trail | 5.1 | 7, 10 | `relay/services/audit.py` | TC-N11 | 2 | NF-011 (B12) | N |
 | CHAT-SR-001 | Stale and unauthenticated socket rejection | 6.1 | 5.2, 10 | `relay/events/_ack.py` | TC-S01 | 1 | SR-001, 003, 005, 007 (T6) | N |
@@ -393,9 +393,9 @@ In accordance with course deliverable guidelines, all technical, architectural, 
 - **v2.0 Realization:** Maintained all original 17 FRs, 6 NFRs, and 5 SRs verbatim, while appending new concrete requirements to reach 52 FRs, 11 NFRs, and 14 SRs (77 total requirements).
 - **Rationale:** Preserves historical traceability from SRS v1.0 without breaking existing requirement keys.
 
-### 8. Tracking and Governance
+### 8. Tracking and Governance (Jira Dropped, Control v1.1)
 - **v1.0 Proposal:** Informal task coordination.
-- **v2.0 Realization:** Strict dual-tracking using Jira (`RLY` project) mirrored on GitHub Projects/Issues, governed by a frozen Control File (`00-CONTROL.md`).
+- **v2.0 Realization:** Centralized tracking on GitHub Issues and linked GitHub Project (with Story Points, assignees, iterations), dropping external Jira synchronization as decided in Control v1.1. Branches, commits, and PRs track directly by Registry ID and issue numbers (Closes #NN).
 - **Rationale:** Satisfies course deliverable requirements for agile process rigor and transparent evaluation metrics.
 
 ### 9. Team Roles Re-Split (2026-11-07)
@@ -404,6 +404,6 @@ In accordance with course deliverable guidelines, all technical, architectural, 
 - **Rationale:** Streamlines automated testing under a single coordinated test harness, eliminates cross-member merge contention, and ensures dedicated leadership over verification and quality.
 
 ### 10. Sprint Schedule Realignment
-- **Initial Plan:** Sprints conducted concurrently during preliminary lecture periods.
-- **v2.0 Realization:** Real-world execution schedule adjusted to run consecutively in November 2026 (Sprint 1: Nov 8–14, 2026; Sprint 2: Nov 15–21, 2026), capturing the complete development cycle.
+- **Initial Plan:** Official course sprint windows were 19 Oct to 23 Oct 2026 (Sprint 1) and 26 Oct to 30 Oct 2026 (Sprint 2).
+- **v2.0 Realization:** The team did not deliver within the preliminary course windows and conducted a team restart on 2026-11-07 under a single control file. Actual implementation and PR merges on the fresh repository took place between 12 Nov and 15 Nov 2026 (Sprint 1 merged 12–14 Nov, Sprint 2 merged 14–15 Nov, final review 16 Nov).
 - **Rationale:** Honestly reflects team sprint execution windows, alignment with deliverable deadlines, and paired-testing integration cycles.
