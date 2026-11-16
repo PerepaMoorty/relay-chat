@@ -3,7 +3,7 @@
 ## Run details
 
 - Tester: Viswajith
-- Date and time (local): 2026-11-17, approximately 00:03–00:12 IST
+- Date and time (local): 2026-11-16 23:47–2026-11-17 00:12 IST
 - Application commit / branch: `f4d233a` / `test/T9-load-test-manual-records`; no application code was changed for this run
 - Server URL: `http://127.0.0.1:5065` (local disposable SQLite database seeded with demo data)
 - Browser(s) and version(s): Opera normal window (Alice) and Opera private window (Bob); version not captured
@@ -16,10 +16,10 @@
 |---|---|---|---|---|
 | TC-E2E-001 | Log in from two separate browser sessions and open `#general` | Both users reach the chat | Alice was signed in from the normal Opera window and Bob from the private Opera window. Both reached the chat; Alice's online list showed Bob. | Pass |
 | TC-E2E-002 | Send messages in both directions | Each other user's message appears live without refresh | Alice submitted the same test text during repeated attempts; three entries were visible in Alice's history. Bob's receipt and the reverse direction were not verified because the private window was minimized and could not be brought forward by the UI control. | Not run |
-| TC-E2E-003 | Observe online users and join/leave notices | Presence changes appear in the interface | Alice's online list showed Alice and Bob at the same time. No join or leave was induced and verified. | Not run |
+| TC-E2E-003 | Observe online users and join/leave notices | Presence changes appear in the interface | Alice's online list showed Alice and Bob at the same time. No join or leave was induced and verified. | Partial |
 | TC-E2E-004 | Start a direct message and exchange messages | Messages reach only the intended participant | No DM exchange or third-user visibility check was performed. | Not run |
 | TC-E2E-005 | Create, join, and leave a room | Room list and membership update correctly | No room lifecycle check was performed. | Not run |
-| TC-E2E-006 | Scroll back through room history | Older messages load in the expected order | The chat showed the loaded T9 messages in increasing order while moving toward the newest messages. Loading older history was not verified. | Not run |
+| TC-E2E-006 | Scroll back through room history | Older messages load in the expected order | At 23:59:27 IST, scrolling triggered `GET /api/rooms/1/messages?before=158&limit=50`, which returned HTTP 200 in the server log. Visible T9 messages were in increasing label order. The fetched older page contents were not fully checked visually. | Partial |
 | TC-E2E-007 | Generate unread messages, then open the room | Unread indicators and receipts update correctly | No unread/read receipt scenario was performed. | Not run |
 | TC-E2E-008 | Edit and delete messages | Changes appear live and deleted content is removed | No edit or delete action was performed. | Not run |
 | TC-E2E-009 | Restart the server during an active chat | Client reconnects and synchronizes without lost or duplicate messages | No restart/reconnect browser scenario was performed. | Not run |
