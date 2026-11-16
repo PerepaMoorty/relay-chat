@@ -1,6 +1,6 @@
 """Measure Relay Socket.IO message delivery with concurrent client connections.
 
-Install the optional client dependencies with ``python -m pip install -r requirements-load.txt``.
+Install the optional client dependencies with ``python -m pip install -r scripts/requirements-load.txt``.
 Run against a disposable or explicitly designated test server; this script sends messages to #general.
 """
 
@@ -41,7 +41,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--username", default="alice", help="Existing Relay test account")
     parser.add_argument("--password", help="Account password; otherwise prompt or use RELAY_LOAD_PASSWORD")
     parser.add_argument("--clients", type=int, default=20, help="Concurrent Socket.IO connections (default: 20)")
-    parser.add_argument("--messages", type=int, default=100, help="Messages sent concurrently (default: 100)")
+    parser.add_argument("--messages", type=int, default=100, help="Messages sent during this run (default: 100)")
+    parser.add_argument(
+        "--sequential",
+        action="store_true",
+        help="Send messages one at a time from one connection to check sequential server ordering",
+    )
     parser.add_argument("--transport", choices=("websocket", "polling"), default="websocket")
     parser.add_argument("--timeout", type=float, default=15, help="Per-operation timeout in seconds")
     parser.add_argument("--report", type=Path, help="Write the JSON report to this path")
@@ -134,8 +139,12 @@ def main() -> int:
             raise RuntimeError("One or more Socket.IO clients did not connect")
 
         def send_batch(client_index: int) -> None:
+            if args.sequential and client_index != 0:
+                return
             client = clients[client_index]
-            for seq in range(client_index, args.messages, args.clients):
+            start = 0 if args.sequential else client_index
+            step = 1 if args.sequential else args.clients
+            for seq in range(start, args.messages, step):
                 client_id = f"load-{run_id}-{seq:06d}"
                 started = time.perf_counter()
                 with lock:
@@ -159,12 +168,15 @@ def main() -> int:
                     acknowledgements[client_id] = (message["id"], acked_at)
 
         send_started = time.perf_counter()
-        with ThreadPoolExecutor(max_workers=args.clients) as pool:
-            futures = [pool.submit(send_batch, i) for i in range(args.clients)]
-            for future in as_completed(
-                futures, timeout=args.timeout * max(1, math.ceil(args.messages / args.clients)) + 5
-            ):
-                future.result()
+        if args.sequential:
+            send_batch(0)
+        else:
+            with ThreadPoolExecutor(max_workers=args.clients) as pool:
+                futures = [pool.submit(send_batch, i) for i in range(args.clients)]
+                for future in as_completed(
+                    futures, timeout=args.timeout * max(1, math.ceil(args.messages / args.clients)) + 5
+                ):
+                    future.result()
         send_duration = time.perf_counter() - send_started
 
         with lock:
@@ -185,11 +197,14 @@ def main() -> int:
             for client_id, deliveries in arrivals.items()
             for _client_index, _message_id, received_at in deliveries
         ]
-        per_message_delivery = [
-            max((received_at - started_at[client_id]) * 1000 for _idx, _id, received_at in arrivals.get(client_id, []))
-            for client_id in acknowledgements
-            if arrivals.get(client_id)
-        ]
+        per_message_delivery = []
+        for client_id in acknowledgements:
+            deliveries = arrivals.get(client_id, [])
+            receiver_ids = {client_index for client_index, _message_id, _received_at in deliveries}
+            if len(receiver_ids) == args.clients:
+                per_message_delivery.append(
+                    max((received_at - started_at[client_id]) * 1000 for _idx, _id, received_at in deliveries)
+                )
         expected_message_ids = sorted(message_id for message_id, _acked_at in acknowledgements.values())
         ordering_failures = []
         ordering_examples = []
@@ -224,12 +239,18 @@ def main() -> int:
             )
         )
         ordering_passed = not ordering_failures and len(acknowledgements) == args.messages
+        messages_within_2_seconds = sum(latency <= 2_000 for latency in per_message_delivery)
+        latency_percentage = (
+            (messages_within_2_seconds / len(per_message_delivery)) * 100 if per_message_delivery else 0
+        )
+        latency_passed = bool(per_message_delivery) and latency_percentage >= 90
         criteria = {
             "at_least_20_clients_connected": args.clients >= MIN_CLIENTS
             and all(client.connected for client in clients),
             "every_message_acknowledged": len(acknowledgements) == args.messages and not errors,
             "every_client_received_every_message": all_clients_received_all,
             "message_ids_arrived_in_order": ordering_passed,
+            "90_percent_of_messages_delivered_within_2_seconds": latency_passed,
         }
         passed = all(criteria.values())
         report = {
@@ -238,6 +259,7 @@ def main() -> int:
             "status": "PASS" if passed else "FAIL",
             "target": args.url,
             "transport": args.transport,
+            "send_mode": "sequential" if args.sequential else "concurrent",
             "authenticated_user": args.username,
             "concurrent_connections": args.clients,
             "unique_accounts": 1,
@@ -256,9 +278,20 @@ def main() -> int:
             "delivery_latency_ms": {
                 "mean": round(statistics.mean(delivery_latencies), 3) if delivery_latencies else None,
                 "p50": percentile(delivery_latencies, 50),
+                "p90": percentile(delivery_latencies, 90),
                 "p95": percentile(delivery_latencies, 95),
                 "max": round(max(delivery_latencies), 3) if delivery_latencies else None,
+                "per_message_max_p90": percentile(per_message_delivery, 90),
                 "per_message_max_p95": percentile(per_message_delivery, 95),
+            },
+            "latency_target": {
+                "requirement": "CHAT-NF-001 / TC-PERF-01",
+                "target_percent": 90,
+                "target_ms": 2000,
+                "messages_measured": len(per_message_delivery),
+                "messages_within_target": messages_within_2_seconds,
+                "percent_within_target": round(latency_percentage, 3),
+                "passed": latency_passed,
             },
             "ordering": {
                 "passed": ordering_passed,
@@ -267,7 +300,7 @@ def main() -> int:
                 "message_ids": expected_message_ids,
             },
             "criteria": criteria,
-            "latency_threshold": "Not evaluated: docs/test-plan.md specifies measurement but no numeric target.",
+            "latency_threshold": "At least 90% of fully delivered messages within 2,000 ms (CHAT-NF-001).",
             "errors": errors,
             "runtime": {"python": platform.python_version(), "platform": platform.platform()},
         }
