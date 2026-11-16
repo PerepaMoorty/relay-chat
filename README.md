@@ -43,6 +43,8 @@ We provide one-click demo scripts that automatically initialize a virtual enviro
 
 Once started, navigate your browser to: **`http://localhost:5000`**
 
+`run-demo.bat` and `run-demo.sh` seed demo data only when `instance/relay.db` does not exist. To reseed from scratch, delete `instance/relay.db` and `instance/uploads` and run the script again.
+
 ---
 
 ### 2. Manual Setup
@@ -100,11 +102,12 @@ The `seed-demo` command populates the database with standard testing credentials
 | `alice` | `password123` | User | Standard demo participant |
 | `bob` | `password123` | User | Standard demo participant |
 | `carol` | `password123` | User | Standard demo participant |
-| `admin` | `admin123` | Admin | System administrator with moderation console |
+| `dave` | `password123` | User | Standard demo participant |
+| `admin` | `admin12345` | Admin | System administrator with moderation console |
 
 To create a new administrator account via CLI:
 ```bash
-flask --app run create-admin <username> <password>
+flask --app run create-admin <username>
 ```
 
 ---
