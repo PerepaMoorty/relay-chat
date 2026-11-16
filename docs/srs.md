@@ -237,6 +237,36 @@ The matrix below maps each requirement across the software lifecycle. All in-sco
 | CHAT-F-028 | Reconnect and catch-up sync | 4.4 | 5.4, 5.7 | `relay/services/sync.py` | TC-28 | 1 | B8, F2, F9, T6 | A |
 | CHAT-F-029 | Edit message | 4.3 | 5.4 | `relay/events/chat.py` | TC-29 | 1 | B5, B8, F6, T6 | A |
 | CHAT-F-030 | Delete message | 4.3 | 5.4, 7 | `relay/events/chat.py` | TC-30 | 1 | B5, B8, F6, T6 | A |
+| CHAT-F-001 | Connect via configured IP/port | 4.1 | 5.1, 5.8 | `relay/events/connection.py` | TC-01 | 1 | B7, F2, T6 | N |
+| CHAT-F-002 | Username prompt | 4.2 | 5.8, 6 | `relay/static/js/views/login.js` | TC-02 | 1 | F4, T3 | N |
+| CHAT-F-003 | Unique usernames | 4.2 | 5.8, 7 | `relay/models/user.py` | TC-03 | 1 | B4, T3 | N |
+| CHAT-F-004 | Send text message | 4.3 | 5.4, 5.8 | `relay/events/chat.py` | TC-04 | 1 | B5, B8, F7, T6 | N |
+| CHAT-F-005 | Broadcast public messages | 4.3 | 5.1, 5.8 | `relay/events/chat.py` | TC-05 | 1 | B8, T6 | N |
+| CHAT-F-006 | Private messages (DMs) | 4.3 | 5.1, 5.8, 7 | `relay/services/rooms.py` | TC-06 | 1 | B5, B6, F5, T5, T6 | N |
+| CHAT-F-007 | Live display without refresh | 4.3 | 5.8, 9 | `relay/static/js/views/conversation.js` | TC-07 | 1 | F6, F9, T6 | N |
+| CHAT-F-008 | Server timestamps in local time | 4.3 | 5.8, 9 | `relay/static/js/dom.js` | TC-08 | 1 | F3, F6, T5 | N |
+| CHAT-F-009 | Online users list | 4.4 | 5.1, 5.8 | `relay/services/presence.py` | TC-09 | 1 | B7, F5, T6 | N |
+| CHAT-F-010 | Join notice | 4.4 | 5.8 | `relay/events/connection.py` | TC-10 | 1 | B7, F6, T6 | N |
+| CHAT-F-011 | Leave notice | 4.4 | 5.8 | `relay/events/connection.py` | TC-11 | 1 | B7, F6, T6 | N |
+| CHAT-F-012 | Concurrent client scalability | 4.1 | 5.8, 13 | `relay/events/connection.py` | TC-12 | 2 | B7, T6 | N |
+| CHAT-F-013 | Survive unexpected disconnects | 4.1 | 5.3, 5.8 | `relay/events/_ack.py` | TC-13 | 1 | B3, B7, T6 | N |
+| CHAT-F-014 | Graceful termination / logout | 4.1 | 5.8, 6 | `relay/api/auth.py` | TC-14 | 1 | B4, B7, F9, T3 | N |
+| CHAT-F-015 | Username to socket mapping | 4.1 | 4.2, 5.8 | `relay/services/presence.py` | TC-15 | 1 | B2, T2 | N |
+| CHAT-F-016 | Reject invalid messages | 4.3 | 5.8 | `relay/services/messages.py` | TC-16 | 1 | B5, F7, T4 | N |
+| CHAT-F-017 | Communication error handling | 4.1 | 5.3, 5.6 | `relay/events/_ack.py` | TC-17 | 1 | B3, F2, T6 | N |
+| CHAT-F-018 | User registration | 4.2 | 6, 10 | `relay/api/auth.py` | TC-18 | 1 | B4, F4, T3 | N |
+| CHAT-F-019 | User login and socket session | 4.2 | 5.2, 6 | `relay/api/auth.py` | TC-19 | 1 | B4, B7, F4, T3, T6 | N |
+| CHAT-F-020 | Message history pagination | 4.3 | 6, 7 | `relay/api/rooms.py` | TC-20 | 1 | B6, F6, T5 | N |
+| CHAT-F-021 | Offline message delivery | 4.4 | 5.4, 5.7 | `relay/services/sync.py` | TC-21 | 1 | B5, B6, T5 | N |
+| CHAT-F-022 | Create group room | 4.5 | 6, 7 | `relay/api/rooms.py` | TC-22 | 1 | B6, F8, T5 | N |
+| CHAT-F-023 | Browse, join and leave rooms | 4.5 | 6 | `relay/api/rooms.py` | TC-23 | 1 | B6, F8, T5 | N |
+| CHAT-F-024 | Invite code management | 4.5 | 14 | `relay/services/rooms.py` | TC-24 | Backlog | None (Out of Scope) | N |
+| CHAT-F-025 | Owner room management | 4.5 | 14 | `relay/services/rooms.py` | TC-25 | Backlog | None (Out of Scope) | N |
+| CHAT-F-026 | Typing indicators | 4.4 | 5.4 | `relay/events/presence.py` | TC-26 | 2 | B9, F6, F7, T7 | N |
+| CHAT-F-027 | Delivery and read receipts | 4.4 | 5.4, 5.7 | `relay/services/receipts.py` | TC-27 | 1 | B5, B8, F6, T6 | N |
+| CHAT-F-028 | Reconnect and catch-up sync | 4.4 | 5.4, 5.7 | `relay/services/sync.py` | TC-28 | 1 | B8, F2, F9, T6 | N |
+| CHAT-F-029 | Edit message | 4.3 | 5.4 | `relay/events/chat.py` | TC-29 | 1 | B5, B8, F6, T6 | N |
+| CHAT-F-030 | Delete message | 4.3 | 5.4, 7 | `relay/events/chat.py` | TC-30 | 1 | B5, B8, F6, T6 | N |
 | CHAT-F-031 | Emoji reaction picker | 4.3 | 14 | `relay/services/messages.py` | TC-31 | Backlog | None (Out of Scope) | N |
 | CHAT-F-032 | Threaded replies | 4.3 | 14 | `relay/services/messages.py` | TC-32 | Backlog | None (Out of Scope) | N |
 | CHAT-F-033 | Message pinning | 4.3 | 14 | `relay/services/messages.py` | TC-33 | Backlog | None (Out of Scope) | N |
@@ -248,6 +278,11 @@ The matrix below maps each requirement across the software lifecycle. All in-sco
 | CHAT-F-039 | Members-only file download | 4.6 | 6, 10 | `relay/api/files.py` | TC-39 | 2 | B11, T7 | A |
 | CHAT-F-040 | Unread message counters | 4.4 | 5.7 | `relay/services/receipts.py` | TC-40 | 1 | B5, B6, F3, F5, T5 | A |
 | CHAT-F-041 | Message text search | 4.7 | 6, 7 | `relay/api/search.py` | TC-41 | 2 | B10, F8, T7 | A |
+| CHAT-F-037 | File attachment sharing | 4.6 | 6, 10 | `relay/api/files.py` | TC-37 | 2 | B11, F6, F7, T7 | N |
+| CHAT-F-038 | Inline image preview | 4.6 | 6, 9 | `relay/static/js/views/conversation.js` | TC-38 | 2 | B11, F6, T7 | N |
+| CHAT-F-039 | Members-only file download | 4.6 | 6, 10 | `relay/api/files.py` | TC-39 | 2 | B11, T7 | N |
+| CHAT-F-040 | Unread message counters | 4.4 | 5.7 | `relay/services/receipts.py` | TC-40 | 1 | B5, B6, F3, F5, T5 | N |
+| CHAT-F-041 | Message text search | 4.7 | 6, 7 | `relay/api/search.py` | TC-41 | 2 | B10, F8, T7 | N |
 | CHAT-F-042 | Browser push notifications | 4.4 | 14 | `relay/static/js/app.js` | TC-42 | Backlog | None (Out of Scope) | N |
 | CHAT-F-043 | Conversation history export | 4.3 | 14 | `relay/services/messages.py` | TC-43 | Backlog | None (Out of Scope) | N |
 | CHAT-F-044 | User profiles and avatar uploads | 4.2 | 14 | `relay/services/auth.py` | TC-44 | Backlog | None (Out of Scope) | N |
@@ -284,6 +319,38 @@ The matrix below maps each requirement across the software lifecycle. All in-sco
 | CHAT-SR-012 | Admin accountability and immutable audit log | 6.1 | 7, 10 | `relay/services/audit.py` | TC-S12 | 2 | SR-012 (T8) | A |
 | CHAT-SR-013 | Instant session revocation upon ban or logout | 6.1 | 8.2, 10 | `relay/services/auth.py` | TC-S13 | 2 | SR-013 (T3, T8) | A |
 | CHAT-SR-014 | WebSocket hijacking defense via SameSite & CORS | 6.1 | 4.3, 10 | `relay/__init__.py` | TC-S14 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | A |
+| CHAT-F-046 | Report inappropriate message | 4.8 | 6 | `relay/api/admin.py` | TC-46 | 2 | B12, F10, T8 | N |
+| CHAT-F-047 | Review and resolve reports | 4.8 | 6 | `relay/api/admin.py` | TC-47 | 2 | B12, F10, T8 | N |
+| CHAT-F-048 | Ban and unban users | 4.8 | 6, 8.2 | `relay/api/admin.py` | TC-48 | 2 | B12, F10, T8 | N |
+| CHAT-F-049 | Mute and unmute users | 4.8 | 6 | `relay/api/admin.py` | TC-49 | 2 | B12, F10, T8 | N |
+| CHAT-F-050 | Admin room deletion | 4.8 | 14 | `relay/services/rooms.py` | TC-50 | Backlog | None (Out of Scope) | N |
+| CHAT-F-051 | Append-only audit log | 4.8 | 6, 7 | `relay/services/audit.py` | TC-51 | 2 | B12, F10, T8 | N |
+| CHAT-F-052 | Monitor connected clients & activity | 4.8 | 6 | `relay/services/activity.py` | TC-52 | 2 | B2, B12, F10, T8 | N |
+| CHAT-NF-001 | End-to-end message latency < 200ms | 5.1 | 1, 13 | `relay/events/chat.py` | TC-N01 | 2 | NF-001, NF-005 (T9) | N |
+| CHAT-NF-002 | Cross-browser compatibility | 5.1 | 2 | `relay/templates/index.html` | TC-N02 | 1 | NF-002, NF-004, NF-006 (T6) | N |
+| CHAT-NF-003 | Graceful recovery from network disconnects | 5.1 | 5.2, 5.7 | `relay/events/_ack.py` | TC-N03 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | N |
+| CHAT-NF-004 | Zero external runtime broker dependencies | 5.1 | 2 | `run.py` | TC-N04 | 1 | NF-002, NF-004, NF-006 (T6) | N |
+| CHAT-NF-005 | Concurrent client scalability (>= 20 clients) | 5.1 | 13 | `relay/events/connection.py` | TC-N05 | 2 | NF-001, NF-005 (T9) | N |
+| CHAT-NF-006 | Strict message delivery order preservation | 5.1 | 5.7 | `relay/models/message.py` | TC-N06 | 1 | NF-002, NF-004, NF-006 (T6) | N |
+| CHAT-NF-007 | Zero-configuration deployment on localhost/LAN | 5.1 | 2, 4.3 | `run.py` | TC-N07 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | N |
+| CHAT-NF-008 | File storage cap <= 10 MB per attachment | 5.1 | 4.3, 10 | `relay/services/files.py` | TC-N08 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | N |
+| CHAT-NF-009 | Automated test suite coverage >= 70% on services | 5.1 | 13 | `tests/` | TC-N09 | 2 | NF-009 (S5) | N |
+| CHAT-NF-010 | One-click startup demo execution scripts | 5.1 | 1 | `run-demo.bat` | TC-N10 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | N |
+| CHAT-NF-011 | Data retention and immutable audit trail | 5.1 | 7, 10 | `relay/services/audit.py` | TC-N11 | 2 | NF-011 (B12) | N |
+| CHAT-SR-001 | Stale and unauthenticated socket rejection | 6.1 | 5.2, 10 | `relay/events/_ack.py` | TC-S01 | 1 | SR-001, 003, 005, 007 (T6) | N |
+| CHAT-SR-002 | Username namespace security and uniqueness | 6.1 | 5.8, 7 | `relay/models/user.py` | TC-S02 | 1 | SR-002, SR-006 (T3) | N |
+| CHAT-SR-003 | Direct message privacy and channel isolation | 6.1 | 5.1, 10 | `relay/services/rooms.py` | TC-S03 | 1 | SR-001, 003, 005, 007 (T6) | N |
+| CHAT-SR-004 | Message input length and payload validation | 6.1 | 5.6, 10 | `relay/services/messages.py` | TC-S04 | 1 | SR-004 (T4) | N |
+| CHAT-SR-005 | Re-authentication on revoked session tokens | 6.1 | 5.2, 10 | `relay/events/_ack.py` | TC-S05 | 1 | SR-001, 003, 005, 007 (T6) | N |
+| CHAT-SR-006 | Secure password hashing with salted scrypt | 6.1 | 10 | `relay/services/auth.py` | TC-S06 | 1 | SR-002, SR-006 (T3) | N |
+| CHAT-SR-007 | Handshake authentication gating via session cookie | 6.1 | 5.2, 10 | `relay/events/connection.py` | TC-S07 | 1 | SR-001, 003, 005, 007 (T6) | N |
+| CHAT-SR-008 | Server-side authorization and membership checks | 6.1 | 10 | `relay/services/` | TC-S08 | 1 | SR-008 (T5, T8) | N |
+| CHAT-SR-009 | Strict XSS prevention via textContent and CSP | 6.1 | 9, 10 | `relay/static/js/dom.js` | TC-S09 | 1 | SR-009 (T1, F3) | N |
+| CHAT-SR-010 | File upload extension and magic-byte validation | 6.1 | 10 | `relay/services/files.py` | TC-S10 | 2 | SR-010 (T7) | N |
+| CHAT-SR-011 | SQL injection immunity via SQLAlchemy ORM | 6.1 | 10 | `relay/models/` | TC-S11 | 1 | SR-011 (T4, T7) | N |
+| CHAT-SR-012 | Admin accountability and immutable audit log | 6.1 | 7, 10 | `relay/services/audit.py` | TC-S12 | 2 | SR-012 (T8) | N |
+| CHAT-SR-013 | Instant session revocation upon ban or logout | 6.1 | 8.2, 10 | `relay/services/auth.py` | TC-S13 | 2 | SR-013 (T3, T8) | N |
+| CHAT-SR-014 | WebSocket hijacking defense via SameSite & CORS | 6.1 | 4.3, 10 | `relay/__init__.py` | TC-S14 | 2 | NF-003, NF-007, NF-008, NF-010, SR-014 (T9, P3) | N |
 
 ---
 
