@@ -156,10 +156,17 @@ Non-functional tests are scheduled for Sprint 2.
 
 | ID | Requirement | Verification |
 |---|---|---|
-| TC-NF-001 | CHAT-NF-001 — latency | Measure message delivery latency using Socket.IO clients |
+| TC-NF-001 | CHAT-NF-001 — latency | Measure message delivery latency using Socket.IO clients; at least 90% of messages must reach all connected recipients within 2 seconds |
 | TC-NF-005 | CHAT-NF-005 — 20+ clients | Exercise the system with at least 20 concurrent clients |
-| TC-NF-006 | CHAT-NF-006 — message ordering | Verify message ordering under concurrent activity |
+| TC-NF-006 | CHAT-NF-006 — message ordering | Send messages sequentially through the server and verify every receiver observes increasing message IDs |
 | TC-NF-009 | CHAT-NF-009 — service coverage | Track coverage of `relay/services` against the target of at least 70% |
+
+| Test plan ID | Backlog test case | Requirement |
+|---|---|---|
+| TC-NF-001 | TC-PERF-01 | CHAT-NF-001 |
+| TC-NF-005 | TC-SCALE-01 | CHAT-NF-005 |
+| TC-NF-006 | TC-ORD-01 | CHAT-NF-006 |
+| TC-NF-009 | TC-MAINT-01 | CHAT-NF-009 |
 
 ## 7. Test execution and reporting
 
