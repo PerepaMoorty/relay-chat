@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Project** | Relay — Real-Time Chat Application |
-| **Review Date** | 2026-11-21 |
+| **Review Date** | 2026-11-16 |
 | **Product Owner** | Naivadh Shrivastava (PES2UG24CS297) |
 | **Scrum Master** | Medha Singh (PES2UG24CS274) |
 | **Developers** | Lakshmi Narasimha Moorty Perepa (PES2UG24CS248), Malepati Viswajith (PES2UG24CS259) |
@@ -13,55 +13,60 @@
 
 ## 1. Sprint 2 Functional Acceptance
 
-| Card | Description | Acceptance Criteria | Evidence | Verdict | Notes |
-|---|---|---|---|:---:|---|
-| **F-012** | Concurrent clients | Handles >= 20 concurrent active socket connections | TC-12, TC-N05, T6 tests | **A** | Scalability verified |
-| **F-026** | Typing indicators | Displays live typing state with 3s auto-expire | TC-26, T7 test suite, live test | **A** | Debounce & expire working |
-| **F-037** | Share files | Upload attachments up to 10 MB with MIME check | TC-37, T7 test suite | **A** | Magic bytes validated |
-| **F-038** | Image preview | Inline image rendering for PNG, JPEG, GIF, WebP | TC-38, live check | **A** | Responsive previews |
-| **F-039** | Members-only download | Files downloadable only by room members | TC-39, T7 test suite | **A** | Non-members get 404 |
-| **F-041** | Search messages | Case-insensitive text search scoped to joined rooms | TC-41, T7 test suite | **A** | Room scoping verified |
-| **F-046** | Report message | Members can flag messages with reason | TC-46, T8 test suite | **A** | Stored in moderation queue |
-| **F-047** | Review reports | Admin can review, dismiss, or delete messages | TC-47, T8 test suite | **A** | Live deletion confirmed |
-| **F-048** | Ban/unban users | Admin ban revokes session and disconnects socket | TC-48, T8 test suite | **A** | Instant socket termination |
-| **F-049** | Mute/unmute users | Admin mute restricts sending while allowing read | TC-49, T8 test suite | **A** | Sender block verified |
-| **F-051** | Audit log | Append-only record of all administrative actions | TC-51, T8 test suite | **A** | Immutable trail confirmed |
-| **F-052** | Monitor clients & activity | Admin dashboard shows active sockets & server events | TC-52, T8 test suite | **A** | Real-time diagnostics |
+| ID | Title | Acceptance / Measurement Criteria | Evidence | Test Case | Verdict | Notes |
+|---|---|---|---|---|:---:|---|
+| **CHAT-F-012** | Concurrent clients | Multiple clients connect and communicate simultaneously. | T6, B7 merges | `TC-SRV-01` | **A** | Concurrency verified in T6 |
+| **CHAT-F-026** | Typing indicators | Indicator appears within 1 s of typing and clears within 3 s of stopping or sending. | T7, B9, F6, F7 merges | `TC-PRES-01` | **A** | Debounce & auto-expire working |
+| **CHAT-F-037** | Share files and images | Allowed files up to 10 MB arrive as messages with name and size; larger or disallowed files fail with PAYLOAD_TOO_LARGE / UNSUPPORTED_TYPE before storage. | T7, B11, F6, F7 merges | `TC-FILE-01` | **A** | MIME & payload limits checked |
+| **CHAT-F-038** | Inline image preview | A PNG shows as a thumbnail at most 320 px wide; clicking opens it full size. | T7, B11, F6 merges | `TC-FILE-02` | **A** | Inline previews rendered |
+| **CHAT-F-039** | Members-only file download | Members download; logged-in non-members get 403; anonymous requests get 401. | T7, B11 merges | `TC-FILE-03` | **A** | Non-members blocked |
+| **CHAT-F-041** | Search messages | Results come only from the user's conversations and link to the message in context. | T7, B10, F8 merges | `TC-SRCH-01` | **A** | Scoped search verified |
+| **CHAT-F-046** | Report a message | A report is created as 'open'; the same user cannot report the same message twice. | T8, B12, F10 merges | `TC-ADM-01` | **A** | Stored in moderation queue |
+| **CHAT-F-047** | Review reports and remove messages | Deleting removes the message from all clients and resolves the report; non-admins get 403. | T8, B12, F10 merges | `TC-ADM-02` | **A** | Live deletion confirmed |
+| **CHAT-F-048** | Ban and unban users | A banned online user's tabs disconnect within 2 s with a notice; logins are refused until unbanned. | T8, B12, F10 merges | `TC-ADM-03` | **A** | Instant socket termination |
+| **CHAT-F-049** | Mute users | A muted user's send fails with MUTED and the remaining time; it works again after expiry. | T8, B12, F10 merges | `TC-ADM-04` | **A** | Mute restriction verified |
+| **CHAT-F-051** | Audit log of admin actions | Each admin action creates exactly one entry, listed newest first; entries cannot be edited or deleted through the app. | T8, B12, F10 merges | `TC-ADM-06` | **A** | Immutable audit trail confirmed |
+| **CHAT-F-052** | Monitor clients and server activity | The admin view lists connected users with connect time; the activity log records each connect, disconnect and handled error. | T8, B2, B12, F10 merges | `TC-ADM-07` | **A** | Telemetry & client monitor verified |
 
 ---
 
 ## 2. Non-Functional & Security Requirements Verification
 
-| ID | Title | Criteria & Target | Evidence | Verdict |
-|---|---|---|---|:---:|
-| **NF-001** | Latency | Message delivery latency < 200 ms | TC-N01, T9 load test script | **A** |
-| **NF-002** | Cross-browser | Works on Chrome, Edge, Firefox, Safari | TC-N02, manual test records | **A** |
-| **NF-003** | Network resilience | Automatic reconnect with exponential backoff | TC-N03, socket.js + sync verification | **A** |
-| **NF-004** | Minimal footprint | Zero external runtime broker dependencies | TC-N04, pure Python + SQLite inspection | **A** |
-| **NF-005** | Scalability | Supports >= 20 concurrent sockets on modest hardware | TC-N05, T6 multi-client suite | **A** |
-| **NF-006** | Message ordering | Monotonic message order preserved via autoincrement ID | TC-N06, T6 tests | **A** |
-| **NF-007** | Zero-config deployment | Launches directly with SQLite defaults | TC-N07, run.py automated setup | **A** |
-| **NF-008** | Storage integrity | Enforces 10 MB cap; isolates files outside web root | TC-N08, files.py inspection | **A** |
-| **NF-009** | Test coverage | Automated test coverage >= 70% on `relay/services` | TC-N09, pytest-cov CI gate (S5) | **A** |
-| **NF-010** | Ease of evaluation | One-click startup via `run-demo.bat` and `run-demo.sh` | TC-N10, P3 deliverables verified | **A** |
-| **NF-011** | Audit immutability | Append-only audit log with no edit/delete paths | TC-N11, audit.py code inspection | **A** |
-| **SR-001** | Dead socket rejection | Stale/unauthenticated socket requests rejected | TC-S01, T6 test suite | **A** |
-| **SR-002** | Username namespace | Case-insensitive uniqueness prevents spoofing | TC-S02, T3 auth suite | **A** |
-| **SR-003** | Channel isolation | DMs accessible exclusively to the 2 participants | TC-S03, T6 multi-client suite | **A** |
-| **SR-004** | Input sanitization | Payload length and control character validation | TC-S04, T4 unit tests | **A** |
-| **SR-005** | Token revocation | Revoked session immediately disconnects socket | TC-S05, T6 multi-client suite | **A** |
-| **SR-006** | Credential security | Passwords stored with salted scrypt hashing | TC-S06, T3 auth suite | **A** |
-| **SR-007** | Handshake auth | Handshake verifies active session cookie | TC-S07, T6 multi-client suite | **A** |
-| **SR-008** | Server authorization | Service layer enforces permissions for all actions | TC-S08, T5/T8 test suites | **A** |
-| **SR-009** | XSS prevention | `textContent` rendering + Content Security Policy | TC-S09, dom.js + headers check | **A** |
-| **SR-010** | Upload safety | Extension allow-list + magic-byte verification | TC-S10, T7 test suite | **A** |
-| **SR-011** | SQL injection immunity | Parameterized queries via SQLAlchemy ORM | TC-S11, T4/T7 test suites | **A** |
-| **SR-012** | Admin accountability | Tamper-resistant audit log records all actions | TC-S12, T8 test suite | **A** |
-| **SR-013** | Instant revocation | Session version bump forces immediate logout | TC-S13, T3/T8 test suites | **A** |
-| **SR-014** | CSWSH defense | Same-origin socket policy + CORS whitelist | TC-S14, config.py + handshake check | **A** |
+| ID | Title | Requirement / Target | Evidence | Test Case | Verdict | Notes |
+|---|---|---|---|---|:---:|---|
+| **CHAT-NF-001** | Performance | 90% of test messages delivered within 2 seconds. | T9 load test run log (100% within 2 seconds; concurrent p95: 1,144.766 ms, sequential p95: 21.234 ms) | `TC-PERF-01` | **A** | Target exceeded in T9 load test |
+| **CHAT-NF-002** | Reliability | Server continues operating during concurrent-client testing. | T6 multi-client tests merged | `TC-REL-01` | **A** | Operational stability verified in T6 |
+| **CHAT-NF-003** | Usability | Test users complete basic chat operations. | T9 manual test record template | `TC-UX-01` | **P** | Awaiting novice participant manual execution |
+| **CHAT-NF-004** | Robustness | Failure tests do not crash the application. | T6 error containment tests merged | `TC-ROB-01` | **A** | Error boundary verified in T6 |
+| **CHAT-NF-005** | Scalability | 20 clients connect and communicate during load testing. | T9 load test reports (20 clients, 2,000/2,000 deliveries) | `TC-SCALE-01` | **A** | 20 simultaneous connections verified |
+| **CHAT-NF-006** | Reliability | Test messages appear in expected processing order. | T6 test suite & T9 sequential load test log | `TC-ORD-01` | **A** | Order preserved via autoincrement ID |
+| **CHAT-NF-007** | Reliability | Restart the server mid-conversation: all acknowledged messages persist; clients reconnect ≤ 10 s. | T9 manual test record | `TC-REL-02` | **P** | Manual restart check not yet executed |
+| **CHAT-NF-008** | Compatibility | Acceptance suite passes on Chrome, Edge and Firefox at 360/1366/1920 px. | T9 manual test record | `TC-COMP-01` | **P** | Browser matrix execution pending |
+| **CHAT-NF-009** | Maintainability | CI shows ruff clean and coverage ≥ 70% on relay/services. | CI workflow; S5 coverage gate PR pending | `TC-MAINT-01` | **P** | Pending S5 merge by Medha |
+| **CHAT-NF-010** | Portability | Fresh clone runs on two OSes in under 10 minutes. | P3 merged (`run-demo.bat`, `run-demo.sh`) | `TC-PORT-01` | **A** | One-click setup scripts verified |
+| **CHAT-NF-011** | Data retention | No update/delete path exists for audit_log; retention verified by inspection. | B12 inspection note & schema analysis | `TC-DATA-01` | **A** | Append-only schema verified |
+| **CHAT-SR-001** | Security: Reject invalid connections | Invalid connection attempts are rejected. | T6 test suite merged | `TC-SEC-01` | **A** | Handshake validation confirmed |
+| **CHAT-SR-002** | Security: No duplicate usernames | Duplicate username attempt is rejected. | T3 test suite merged | `TC-SEC-02` | **A** | Case-insensitive constraint |
+| **CHAT-SR-003** | Security: Private-message routing | Third-party client does not receive private message. | T6 multi-client suite merged | `TC-SEC-03` | **A** | DM isolation verified |
+| **CHAT-SR-004** | Security: Validate message data | Malformed or invalid message input is rejected safely. | T4 unit tests merged | `TC-SEC-04` | **A** | 4,000 char cap & validation |
+| **CHAT-SR-005** | Security: No use of dead sockets | Messages from terminated connection are not processed. | T6 test suite merged | `TC-SEC-05` | **A** | Stale sid check confirmed |
+| **CHAT-SR-006** | Security: Salted password hashing | DB shows only hashes; logs captured during login tests contain no password. | T3 auth tests merged | `TC-SEC-06` | **A** | Salted scrypt hashing verified |
+| **CHAT-SR-007** | Security: Session-authenticated sockets | Connect without a cookie or with a banned user's cookie is refused; cookie flags verified. | T6 multi-client suite merged | `TC-SEC-07` | **A** | Cookie auth & flags verified |
+| **CHAT-SR-008** | Security: Server-side authorisation | Requests for rooms the user is not in return FORBIDDEN; spoofed sender fields are ignored. | T5, T8 test suites merged | `TC-SEC-08` | **A** | Service authorization verified |
+| **CHAT-SR-009** | Security: XSS-safe rendering + CSP | `<script>` and `<img onerror>` payloads render literally without executing; CSP header present. | T1, F3 tests merged | `TC-SEC-09` | **A** | Text node rendering & CSP verified |
+| **CHAT-SR-010** | Security: Upload validation | Renamed .exe/.html uploads are rejected; stored names are random; headers verified. | T7 test suite merged | `TC-SEC-10` | **A** | Magic-byte checks verified |
+| **CHAT-SR-011** | Security: ORM-only SQL, length limits | Over-length input fails with VALIDATION_ERROR; SQL metacharacters in search have no effect. | T4, T7 test suites merged | `TC-SEC-11` | **A** | Parameterized queries verified |
+| **CHAT-SR-012** | Security: Admin role + audit | Non-admin calls to /api/admin/* get 403; each admin action yields one audit row. | T8 test suite merged | `TC-SEC-12` | **A** | Role check & audit log verified |
+| **CHAT-SR-013** | Security: Revocation on ban/logout | Ban a user with 2 tabs: both disconnect ≤ 2 s; the old cookie is rejected. | T3, T8 test suites merged | `TC-SEC-13` | **A** | Instant session revocation verified |
+| **CHAT-SR-014** | Security: Origin-restricted WebSocket | A handshake with a foreign Origin header is refused. | T9 load test & test suite merged | `TC-SEC-14` | **A** | Cross-origin check verified |
 
 ---
 
-## 3. Final Sign-Off Decision
-**All 39 in-scope Functional Requirements, 11 Non-Functional Requirements, and 14 Security Requirements are formally ACCEPTED (A).**
-All 13 Could-tier requirements remain documented in the backlog for future releases. The Relay chat system is approved for v1.0.0 final release.
+## 3. Sprint 2 & Final Review Summary
+- All 11 Sprint 2 Functional Requirements (**CHAT-F-012, F-026, F-037–F-039, F-041, F-046–F-049, F-051, F-052**) are formally **ACCEPTED (A)**.
+- All 14 Security Requirements (**CHAT-SR-001 through SR-014**) are formally **ACCEPTED (A)** based on merged automated test suites T1–T8 and T9.
+- 7 of 11 NFRs (**CHAT-NF-001, NF-002, NF-004, NF-005, NF-006, NF-010, NF-011**) are formally **ACCEPTED (A)** based on T6, T9, B12, and P3 evidence.
+- 4 NFRs remain pending (**P**):
+  - **CHAT-NF-003, CHAT-NF-007, CHAT-NF-008:** Waiting on manual execution of browser and novice-user scenarios (recorded as 'Not run' in T9 manual test log).
+  - **CHAT-NF-009:** Waiting on Scrum Master's PR for the S5 coverage gate (>= 70% in CI).
+- Release v1.0.0 will proceed once S5 and final manual test confirmations land.
