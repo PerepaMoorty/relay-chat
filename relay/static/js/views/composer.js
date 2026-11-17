@@ -20,6 +20,8 @@ const MAX_TEXTAREA_ROWS = 6;
 const TYPING_INTERVAL = 2000;
 const TYPING_IDLE_DELAY = 3000;
 
+let clientIdCounter = 0;
+
 const INVALID_CONTROL_CHARACTERS =
     /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/u;
 
@@ -59,6 +61,26 @@ function showError(message) {
 
 function clearError() {
     showError("");
+}
+
+/**
+ * Create an idempotency key for a message send.
+ * crypto.randomUUID is unavailable to browsers on plain-HTTP LAN origins,
+ * so use a per-page unique fallback there. This ID is not an auth token.
+ */
+function createClientId() {
+    if (typeof globalThis.crypto?.randomUUID === "function") {
+        return globalThis.crypto.randomUUID();
+    }
+
+    clientIdCounter += 1;
+
+    return [
+        "relay",
+        Date.now().toString(36),
+        clientIdCounter.toString(36),
+        Math.random().toString(36).slice(2)
+    ].join("-");
 }
 
 function updateSendAvailability() {
@@ -284,18 +306,7 @@ async function sendMessage() {
         return;
     }
 
-    let clientId;
-
-    try {
-        if (typeof globalThis.crypto?.randomUUID !== "function") {
-            throw new Error("Secure message IDs are not available.");
-        }
-
-        clientId = globalThis.crypto.randomUUID();
-    } catch (error) {
-        showError(error.message);
-        return;
-    }
+    const clientId = createClientId();
 
     const payload = {
         room_id: roomId,
