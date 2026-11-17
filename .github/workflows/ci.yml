@@ -27,5 +27,5 @@ jobs:
       - name: Lint (ruff)
         run: ruff check .
 
-      - name: Test (pytest + coverage)
-        run: python -m pytest --cov=relay --cov-report=term-missing
+      - name: Test (pytest + coverage gate)
+        run: python -m pytest --cov=relay/services --cov-report=term-missing --cov-fail-under=70
