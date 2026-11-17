@@ -1,0 +1,16 @@
+[project]
+name = "relay"
+version = "0.1.0"
+description = "Relay: real-time chat application (UE24CS341A Team 8)"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

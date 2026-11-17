@@ -18,7 +18,7 @@ instance/
 *.db
 .env
 
-# Archives
+# Archives (relay-reference.zip stays team-private)
 *.zip
 
 # Editors and OS
