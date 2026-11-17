@@ -42,7 +42,7 @@
 | **CHAT-NF-006** | Reliability | Test messages appear in expected processing order. | T6 test suite & T9 sequential load test log | `TC-ORD-01` | **A** | Order preserved via autoincrement ID |
 | **CHAT-NF-007** | Reliability | Restart the server mid-conversation: all acknowledged messages persist; clients reconnect ≤ 10 s. | T9 manual test record | `TC-REL-02` | **P** | Manual restart check not yet executed |
 | **CHAT-NF-008** | Compatibility | Acceptance suite passes on Chrome, Edge and Firefox at 360/1366/1920 px. | T9 manual test record | `TC-COMP-01` | **P** | Browser matrix execution pending |
-| **CHAT-NF-009** | Maintainability | CI shows ruff clean and coverage ≥ 70% on relay/services. | CI workflow; S5 coverage gate PR pending | `TC-MAINT-01` | **P** | Pending S5 merge by Medha |
+| **CHAT-NF-009** | Maintainability | CI shows ruff clean and coverage ≥ 70% on relay/services. | CI workflow; S5 merged (#132) enforcing >= 70% gate on relay/services | `TC-MAINT-01` | **A** | CI coverage gate active and enforced |
 | **CHAT-NF-010** | Portability | Fresh clone runs on two OSes in under 10 minutes. | P3 merged (`run-demo.bat`, `run-demo.sh`) | `TC-PORT-01` | **A** | One-click setup scripts verified |
 | **CHAT-NF-011** | Data retention | No update/delete path exists for audit_log; retention verified by inspection. | B12 inspection note & schema analysis | `TC-DATA-01` | **A** | Append-only schema verified |
 | **CHAT-SR-001** | Security: Reject invalid connections | Invalid connection attempts are rejected. | T6 test suite merged | `TC-SEC-01` | **A** | Handshake validation confirmed |
@@ -66,7 +66,7 @@
 - All 11 Sprint 2 Functional Requirements (**CHAT-F-012, F-026, F-037–F-039, F-041, F-046–F-049, F-051, F-052**) are formally **ACCEPTED (A)**.
 - All 14 Security Requirements (**CHAT-SR-001 through SR-014**) are formally **ACCEPTED (A)** based on merged automated test suites T1–T8 and T9.
 - 7 of 11 NFRs (**CHAT-NF-001, NF-002, NF-004, NF-005, NF-006, NF-010, NF-011**) are formally **ACCEPTED (A)** based on T6, T9, B12, and P3 evidence.
-- 4 NFRs remain pending (**P**):
+- 3 NFRs remain pending (**P**):
   - **CHAT-NF-003, CHAT-NF-007, CHAT-NF-008:** Waiting on manual execution of browser and novice-user scenarios (recorded as 'Not run' in T9 manual test log).
-  - **CHAT-NF-009:** Waiting on Scrum Master's PR for the S5 coverage gate (>= 70% in CI).
-- Release v1.0.0 will proceed once S5 and final manual test confirmations land.
+- **CHAT-NF-009:** Accepted (**A**) following merge of PR #132 (S5 coverage gate enforcing >= 70% line coverage on relay/services).
+- Release v1.0.0 will proceed once final manual test confirmations land.
