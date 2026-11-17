@@ -6,7 +6,7 @@
 |---|---|
 | **Review date** | 2026-11-16 (per `docs/acceptance/sprint-2.md`) |
 | **Goal** | Relay behaves like a real chat product |
-| **Product Owner verdict** | All 12 listed Sprint 2 functional requirements accepted (the acceptance record says 11). All 14 security requirements accepted. 7 of 11 NFRs accepted, 4 pending (below) |
+| **Product Owner verdict** | All 12 listed Sprint 2 functional requirements accepted (the acceptance record says 11). All 14 security requirements accepted. 8 of 11 NFRs accepted, 3 pending (below) |
 | **Demo** | Typing indicators, file upload and inline preview, search, report and moderation flow, admin console, load test |
 
 ## Cards, PRs, merge dates and verdicts
@@ -33,7 +33,7 @@
 | CHAT-NF-006 | Reliability | T6 (#117, 16 Nov), T9 (#124, 16 Nov) | Accepted | Order preserved via autoincrement ID |
 | CHAT-NF-007 | Reliability | T9 (#124, 16 Nov) | Pending | Manual restart check not yet executed |
 | CHAT-NF-008 | Compatibility | T9 (#124, 16 Nov) | Pending | Browser matrix execution pending |
-| CHAT-NF-009 | Maintainability | S5 (#132, 17 Nov) | Pending | Pending S5 merge by Medha |
+| CHAT-NF-009 | Maintainability | S5 (#132, 17 Nov) | Accepted | CI coverage gate active and enforced |
 | CHAT-NF-010 | Portability | P3 (#120, 16 Nov) | Accepted | One-click setup scripts verified |
 | CHAT-NF-011 | Data retention | B12 (#105, 13 Nov) | Accepted | Append-only schema verified |
 | CHAT-SR-001 | Security: Reject invalid connections | T6 (#117, 16 Nov) | Accepted | Handshake validation confirmed |
@@ -53,7 +53,7 @@
 
 ## Carried over / pending
 - CHAT-NF-003, NF-007, NF-008: need manual browser and novice-user runs. They are recorded as "Not run" in the T9 manual test log. They are accepted only once the evidence exists.
-- CHAT-NF-009: waited for the S5 coverage gate. S5 merged on 17 Nov (#132), so this card can now be accepted.
+- CHAT-NF-009: waited for the S5 coverage gate. S5 merged on 17 Nov (#132) and the Product Owner then accepted the card (#134).
 
 ## Observations
 - The first draft of the acceptance record dated the review in the future and cited evidence that did not exist yet. Moorty's review caught it and it was corrected.
