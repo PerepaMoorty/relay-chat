@@ -493,7 +493,7 @@ The matrix below maps each requirement across the software lifecycle.
 | CHAT-NF-006 | Reliability | 5.1 | 5.7 | `relay/models/message.py` | TC-ORD-01 | Sprint 1 | T6 | A |
 | CHAT-NF-007 | Reliability | 5.1 | 2, 4.3 | `run.py` | TC-REL-02 | Sprint 2 | T9 | P |
 | CHAT-NF-008 | Compatibility | 5.1 | 4.3, 10 | `relay/services/files.py` | TC-COMP-01 | Sprint 2 | T9 | P |
-| CHAT-NF-009 | Maintainability | 5.1 | 13 | `tests/` | TC-MAINT-01 | Sprint 2 | S5 | P |
+| CHAT-NF-009 | Maintainability | 5.1 | 13 | `tests/` | TC-MAINT-01 | Sprint 2 | S5 | A |
 | CHAT-NF-010 | Portability | 5.1 | 1 | `run-demo.bat` | TC-PORT-01 | Sprint 2 | T9, P3 | A |
 | CHAT-NF-011 | Data retention | 5.1 | 7, 10 | `relay/services/audit.py` | TC-DATA-01 | Sprint 2 | B12 | A |
 | CHAT-SR-001 | Security: Reject invalid connections | 6.1 | 5.2, 10 | `relay/events/_ack.py` | TC-SEC-01 | Sprint 1 | T6 | A |
